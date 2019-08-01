@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Configuración de Especies</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../styles/styless.css">
+    <script src="../index.js"></script>
+    <script src="../views/js/configurarEspecies.js"></script>
+    <!-- <script src="../views/js/conexionSocket.js"></script> -->
+</head>
+<body>
+    <img class="imagen" src="../../assets/images/fondo.jpg" height="100%" width="100%" />
+    <div class="container contenedor">
+        <h5 class="text-center">Configurar Especies</h5>
+        <div class="row">
+
+            <div class="col">
+                <img src="../../assets/images/especies.png" alt="" height="400px" width="220px">
+            </div>
+            <div id="listaespecies" style="width: 200px; height: 280px; overflow-y: scroll;"></div>
+
+        </div>
+        <br>
+        <div class="row">
+            <br>
+            <h6 id="coeficientejardin"></h6>
+        </div>
+        <div class="row">
+                <button id="calcular" onclick="calcularKe()" class="btn btn-primary">Calcular y Guardar</button>
+            </div>
+        <!-- <button class="btn btn-primary" onclick="prueba()">prueba</button> -->
+    </div>
+
+    
+    <!-- <script>
+        const io = require('socket.io-client');
+        var socket = io.connect( 'http://localhost:3000' );
+        socket.on('arduino:data', function (data) {
+            console.log(data);
+        })
+    </script> -->
+</body>
+
+</body>
+</html>

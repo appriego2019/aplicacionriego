@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Configuración</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../styles/styless.css">
+    <script src="../index.js"></script>
+</head>
+
+<body>
+    <img class="imagen" src="../../assets/images/fondo.jpg" height="100%" width="100%" />
+    <div class="container contenedor" >
+            <div class="row config">
+                    <div class="col-md-5">
+                            <label>Ingrese cuantos tipos de vegetación:</label>
+                            <input type="number" class="form-control " id="inputnumero">
+                    </div>
+                    <div class="col-md-5">
+                        <br>
+                            <button id="btnVegetaciones" class="btn btn-primary">Generar</button>
+                    </div>
+                </div>
+        <div class="row config">
+            <div class="col" >
+                <img src="../../assets/images/densidad.png" alt="" height="140px" width="220px">
+            </div>
+            
+            <div class="col" >
+                    <div id="misFormas" ></div>
+            </div>
+            
+        </div>
+        <div class="row config">
+            <div class="col">
+                <img src="../../assets/images/microclima.png" alt="" height="140px" width="220px">
+            </div>
+            <div class="col">
+                    <div id="misFormas1"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <br>
+            <button id="btnguardar" class="btn btn-primary">Guardar Coeficientes</button>
+            </div>
+            
+            <div class="col">
+                    <div class="card carddesing" style="width: 18rem;">
+                    <h5 class="text-center">Coeficientes</h5>
+                    <h6 class="text-center" id="coeficientes"></h6>
+                    </div>
+                </div>
+        </div>
+
+
+    </div>
+</body>
+<script>
+    // 
+    const os = require('os');
+    const storage = require('electron-json-storage');
+    // se fija la ruta donde se almacenara la informacion temporal del tiempo
+    //storage.setDataPath(os.tmpdir());
+    storage.setDataPath(os.homedir());
+    var porcentajesCesped = {};
+    var numeroVegetaciones;
+    // para densidad 
+    function creFormas(numeroVegetaciones) {
+        var f = "";
+        for (var i = 0; i < numeroVegetaciones; i++) {
+            f+=`<div class='col-md-6'>`;
+            f+=`<input type="number" class="form-control" id="input_den`+i+`">`;
+            f+=`</div>`;
+        }
+        document.getElementById("misFormas").innerHTML = f;
+    }
+    // para microclima
+    function creFormas1(numeroVegetaciones) {
+        var f = "";
+        for (var i = 0; i < numeroVegetaciones; i++) {
+            f+=`<div class='col-md-6'>`;
+            f+=`<input type="number" class="form-control" id="input_micro`+i+`">`;
+            f+=`</div>`;
+        }
+        document.getElementById("misFormas1").innerHTML = f;
+    }
+
+
+
+    // creFormas();
+
+    // obtener numero de vegetaciones 
+    document.getElementById('btnVegetaciones').addEventListener('click', e => {
+        numeroVegetaciones = document.getElementById('inputnumero').value;
+        if (numeroVegetaciones >= 1 && numeroVegetaciones <= 5) {
+            console.log(numeroVegetaciones);
+            creFormas(numeroVegetaciones);
+            creFormas1(numeroVegetaciones);
+        }else{
+            alert('El numero no puede ser negativo ni mayor a 5!');
+        }
+    });
+
+    // funcion para calcular y guardar coeficiente de densidad y microclima 
+    function guardarCoeficientes() {
+        // variables para coeficiente de densidad
+        var kd;
+        var valorkd = 0;
+        var sumakd = 0;
+        // variables para coeficiente de microclima
+        var km;
+        var valorkm = 0;
+        var sumakm = 0;
+        for (let i = 0; i < numeroVegetaciones; i++) {
+            valorkd = document.getElementById('input_den'+i).value;
+            valorkm = document.getElementById('input_micro'+i).value;
+            valorkd = parseFloat(valorkd);
+            valorkm = parseFloat(valorkm);
+            sumakd = sumakd + valorkd;
+            sumakm = sumakm + valorkm;
+        }
+        kd = sumakd/numeroVegetaciones;
+        km = sumakm/numeroVegetaciones;
+        console.log(sumakd, sumakm);
+        console.log('kd: ',kd ,' km: ', km);
+        var coeficientesKmKd ={
+        km: km, 
+        kd: kd
+        }
+        storage.set('coeficienteskmkd', coeficientesKmKd, function(error) {
+        if (error) throw error;
+        console.log("Guardado correctamente");
+        });
+        obtenerCoeficientes();
+    }
+
+    // llamar a la funcion 
+    document.getElementById('btnguardar').addEventListener('click', e => {
+        guardarCoeficientes();
+    });
+
+    // recupera los coeficientes de densidad y microclima
+    function obtenerCoeficientes(params) {
+        storage.get('coeficienteskmkd', function(error, data) {
+        if (error) throw error;
+        console.log(data);
+        document.getElementById('coeficientes').innerHTML = 'Densidad: '+data.kd+' Microclima: '+data.km;
+      });
+    }
+
+    obtenerCoeficientes();
+
+
+
+
+
+
+</script>
+
+</html>
