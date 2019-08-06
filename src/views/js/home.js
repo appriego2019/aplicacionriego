@@ -71,6 +71,15 @@ function obtenerStorage(){
         console.log(data);
         var presipitacion = (data.currently.precipIntensity)*100;
         var humedad = (data.currently.humidity)*100;
+        
+        // redondear 
+        humedad = Math.round(humedad);
+        presipitacion = Math.round(presipitacion);
+        // evaluar presipitacion es 0
+        if (presipitacion == 0) {
+            presipitacion = 0.01;
+        }
+
         if (document.getElementById('presipitacion') && document.getElementById('humedad')) {
             document.getElementById('presipitacion').innerHTML = presipitacion+'%';
             document.getElementById('humedad').innerHTML=humedad+'%';
