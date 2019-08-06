@@ -20,7 +20,7 @@ storage.setDataPath(os.homedir());
 
 //  librerias para conexion de sockets
 const io = require('socket.io-client');
-var socket = io.connect('http://localhost:3002');
+var socket = io.connect('http://localhost:3000');
 
 
 // recibe los datos enviados del arduino
